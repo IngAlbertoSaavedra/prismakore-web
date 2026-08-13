@@ -6,8 +6,14 @@ import sylvergym from '@/assets/images/demos/sylvergym.png'
 import taller from '@/assets/images/demos/taller.png'
 import tkw from '@/assets/images/demos/tkw.png'
 import todoaire from '@/assets/images/demos/todoaire.png'
+import aromarecuerdos from '@/assets/images/demos/aromarecuerdos.png'
 
 export const demos = [
+  {
+    title: 'Aroma de Recuerdos',
+    image: aromarecuerdos,
+    href: 'https://ajsaavedra.com/demos/aroma-recuerdos/'
+  },
   {
     title: 'ATI Ambiental',
     image: ati,

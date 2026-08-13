@@ -4,7 +4,9 @@
       <div class="section-heading">
         <span class="eyebrow">Servicios</span>
 
-        <h2>Soluciones digitales para negocios que quieren avanzar sin complicarse</h2>
+        <h2>
+          Soluciones digitales para negocios que quieren avanzar sin complicarse
+        </h2>
 
         <p>
           Desde una página clara para vender mejor hasta automatizaciones que reducen trabajo
@@ -14,30 +16,48 @@
 
       <div class="services-grid">
         <v-hover
-          v-for="service in services"
+          v-for="(service, index) in services"
           :key="service.title"
           v-slot="{ isHovering, props }"
           open-delay="100"
           close-delay="120"
         >
-          <a
+          <article
             v-bind="props"
             class="service-card"
-            :class="{ 'is-hovering': isHovering }"
-            :href="service.href"
+            :class="{
+              'is-hovering': isDesktop ? isHovering : tarjetaActiva === index,
+            }"
+            tabindex="0"
+            role="button"
+            :aria-expanded="tarjetaActiva === index"
+            @click="alternarTarjeta(index)"
+            @keydown.enter.prevent="alternarTarjeta(index)"
+            @keydown.space.prevent="alternarTarjeta(index)"
           >
             <div class="card-front">
-              <span class="service-kicker">{{ service.kicker }}</span>
+              <span class="service-kicker">
+                {{ service.kicker }}
+              </span>
 
               <h3>{{ service.title }}</h3>
 
               <p>
                 {{ service.description }}
               </p>
+
+              <span
+                v-if="!isDesktop"
+                class="mobile-hint"
+              >
+                Toca para ver precio
+              </span>
             </div>
 
             <div class="card-hover">
-              <span class="price-label">{{ service.priceLabel }}</span>
+              <span class="price-label">
+                {{ service.priceLabel }}
+              </span>
 
               <strong class="price">
                 {{ service.price }}
@@ -48,8 +68,25 @@
               <p>
                 {{ service.hoverText }}
               </p>
+
+              <a
+                :href="service.href"
+                class="service-action"
+                @click.stop
+              >
+                Me interesa
+              </a>
+
+              <button
+                v-if="!isDesktop"
+                type="button"
+                class="mobile-back"
+                @click.stop="cerrarTarjeta"
+              >
+                Volver
+              </button>
             </div>
-          </a>
+          </article>
         </v-hover>
       </div>
 
@@ -62,7 +99,42 @@
 </template>
 
 <script setup>
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { services } from '../../data/services'
+
+const tarjetaActiva = ref(null)
+const isDesktop = ref(true)
+
+const revisarPantalla = () => {
+  isDesktop.value = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+
+  if (isDesktop.value) {
+    tarjetaActiva.value = null
+  }
+}
+
+const alternarTarjeta = (index) => {
+  if (isDesktop.value) return
+
+  tarjetaActiva.value =
+    tarjetaActiva.value === index
+      ? null
+      : index
+}
+
+const cerrarTarjeta = () => {
+  tarjetaActiva.value = null
+}
+
+onMounted(() => {
+  revisarPantalla()
+
+  window.addEventListener('resize', revisarPantalla)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', revisarPantalla)
+})
 </script>
 
 <style scoped>
@@ -144,7 +216,6 @@ import { services } from '../../data/services'
   flex-direction: column;
 
   color: inherit;
-  text-decoration: none;
 
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid #e7eaf2;
@@ -152,6 +223,7 @@ import { services } from '../../data/services'
   box-shadow: 0 18px 46px rgba(13, 21, 48, 0.08);
 
   overflow: hidden;
+  cursor: pointer;
 
   transform: translateY(0);
   transition:
@@ -172,6 +244,7 @@ import { services } from '../../data/services'
   inset: 0 0 auto 0;
 
   height: 3px;
+
   background: linear-gradient(
     90deg,
     rgba(47, 180, 255, 0),
@@ -182,10 +255,6 @@ import { services } from '../../data/services'
 
   opacity: 0;
   transition: opacity 0.24s ease;
-}
-
-.service-card.is-hovering::before {
-  opacity: 1;
 }
 
 .service-card.is-hovering::before {
@@ -215,11 +284,13 @@ import { services } from '../../data/services'
 .service-card.is-hovering .card-front {
   opacity: 0;
   transform: translateY(-12px);
+  pointer-events: none;
 }
 
 .card-hover {
   opacity: 0;
   transform: translateY(18px);
+  pointer-events: none;
 
   background:
     radial-gradient(circle at 18% 14%, rgba(47, 180, 255, 0.10), transparent 34%),
@@ -230,6 +301,7 @@ import { services } from '../../data/services'
 .service-card.is-hovering .card-hover {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .service-kicker {
@@ -286,11 +358,43 @@ import { services } from '../../data/services'
 }
 
 .card-hover h3 {
-  margin-top: 28px;
+  margin-top: 24px;
 }
 
 .card-hover p {
   color: #303a52;
+}
+
+.service-action {
+  width: fit-content;
+  margin-top: auto;
+  padding: 10px 16px;
+
+  border-radius: 999px;
+
+  background: #10182f;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.service-action:hover {
+  transform: translateY(-2px);
+  background: #137ec8;
+}
+
+.mobile-hint {
+  display: none;
+}
+
+.mobile-back {
+  display: none;
 }
 
 .services-note {
@@ -338,6 +442,32 @@ import { services } from '../../data/services'
 
   .services-note {
     text-align: left;
+  }
+
+  .mobile-hint {
+    display: inline-block;
+    margin-top: auto;
+
+    color: #137ec8;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .mobile-back {
+    display: inline-flex;
+    width: fit-content;
+
+    margin-top: 10px;
+    padding: 0;
+
+    border: 0;
+    background: transparent;
+
+    color: #566178;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
   }
 }
 </style>
