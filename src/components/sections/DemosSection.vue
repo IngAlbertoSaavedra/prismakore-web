@@ -4,35 +4,44 @@
       <div class="section-heading">
         <span class="eyebrow">Demos</span>
 
-        <h2>Proyectos de muestra para distintos tipos de negocio</h2>
+        <h2>
+          Proyectos de muestra para distintos tipos de negocio
+        </h2>
 
         <p>
-          Ejemplos visuales de páginas que pueden adaptarse a negocios, servicios o propuestas comerciales.
+          Ejemplos visuales de páginas que pueden adaptarse a negocios,
+          servicios o propuestas comerciales.
         </p>
       </div>
 
       <v-slide-group
+        v-model="demoActivo"
         class="demos-slide"
         show-arrows
         center-active
+        mandatory
+        @touchstart="iniciarDeslizamiento"
+        @touchend="terminarDeslizamiento"
       >
         <v-slide-group-item
-          v-for="demo in demos"
+          v-for="(demo, index) in demos"
           :key="demo.title"
+          :value="index"
         >
           <v-hover
             v-slot="{ isHovering, props }"
             open-delay="120"
             close-delay="120"
           >
-            <a
+            <article
               v-bind="props"
               class="demo-card"
               :class="{ 'is-hovering': isHovering }"
-              :href="demo.href"
-              target="_blank"
-              rel="noopener"
-              :aria-label="`Ver demo ${demo.title}`"
+              role="link"
+              tabindex="0"
+              :aria-label="`Abrir demo ${demo.title}`"
+              @click="abrirDemo(demo)"
+              @keydown.enter.prevent="abrirDemo(demo)"
             >
               <img
                 class="demo-image"
@@ -42,10 +51,12 @@
 
               <span class="demo-overlay"></span>
 
-              <span class="demo-title">
-                {{ demo.title }}
-              </span>
-            </a>
+              <div class="demo-content">
+                <span class="demo-title">
+                  {{ demo.title }}
+                </span>
+              </div>
+            </article>
           </v-hover>
         </v-slide-group-item>
       </v-slide-group>
@@ -54,17 +65,105 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { demos } from '../../data/demos'
+
+const demoActivo = ref(0)
+
+const inicioTouchX = ref(0)
+const inicioTouchY = ref(0)
+const fueDeslizamiento = ref(false)
+
+const iniciarDeslizamiento = (event) => {
+  const touch = event.changedTouches?.[0]
+
+  if (!touch) return
+
+  inicioTouchX.value = touch.clientX
+  inicioTouchY.value = touch.clientY
+  fueDeslizamiento.value = false
+}
+
+const terminarDeslizamiento = (event) => {
+  const touch = event.changedTouches?.[0]
+
+  if (!touch) return
+
+  const diferenciaX = touch.clientX - inicioTouchX.value
+  const diferenciaY = touch.clientY - inicioTouchY.value
+
+  const movimientoHorizontal = Math.abs(diferenciaX)
+  const movimientoVertical = Math.abs(diferenciaY)
+
+  const minimoDeslizamiento = 45
+
+  if (
+    movimientoHorizontal < minimoDeslizamiento ||
+    movimientoHorizontal <= movimientoVertical
+  ) {
+    fueDeslizamiento.value = false
+    return
+  }
+
+  fueDeslizamiento.value = true
+
+  if (diferenciaX < 0) {
+    siguienteDemo()
+  } else {
+    demoAnterior()
+  }
+
+  window.setTimeout(() => {
+    fueDeslizamiento.value = false
+  }, 250)
+}
+
+const siguienteDemo = () => {
+  if (demoActivo.value < demos.length - 1) {
+    demoActivo.value += 1
+  }
+}
+
+const demoAnterior = () => {
+  if (demoActivo.value > 0) {
+    demoActivo.value -= 1
+  }
+}
+
+const abrirDemo = (demo) => {
+  if (fueDeslizamiento.value) return
+  if (!demo.href) return
+
+  window.open(
+    demo.href,
+    '_blank',
+    'noopener,noreferrer',
+  )
+}
 </script>
 
 <style scoped>
 .demos-section {
   position: relative;
   padding: 92px 0 96px;
+
   background:
-    radial-gradient(circle at 18% 20%, rgba(47, 180, 255, 0.08), transparent 30%),
-    radial-gradient(circle at 82% 14%, rgba(109, 53, 255, 0.10), transparent 32%),
-    linear-gradient(180deg, #f7f9ff 0%, #ffffff 100%);
+    radial-gradient(
+      circle at 18% 20%,
+      rgba(47, 180, 255, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 82% 14%,
+      rgba(109, 53, 255, 0.10),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      #f7f9ff 0%,
+      #ffffff 100%
+    );
+
   color: #0d1530;
   overflow: hidden;
 }
@@ -120,7 +219,6 @@ import { demos } from '../../data/demos'
   background: transparent;
 }
 
-/* Vuetify slide group cleanup */
 :deep(.v-slide-group) {
   background: transparent;
 }
@@ -130,33 +228,16 @@ import { demos } from '../../data/demos'
   overflow: hidden;
 }
 
-:deep(.v-slide-group__wrapper) {
-  background: transparent;
-  overflow: hidden;
-}
-
 :deep(.v-slide-group__content) {
   align-items: center;
   padding: 28px 0 60px;
+
   background: transparent;
 
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 
-:deep(.v-slide-group__container) {
-  background: transparent;
-  overflow: hidden;
-  scroll-behavior: smooth;
-}
-
-:deep(.v-slide-group__wrapper) {
-  background: transparent;
-  overflow: hidden;
-  scroll-behavior: smooth;
-}
-
-/* Arrows */
 :deep(.v-slide-group__prev),
 :deep(.v-slide-group__next) {
   min-width: 58px;
@@ -189,10 +270,13 @@ import { demos } from '../../data/demos'
   overflow: hidden;
 
   color: #ffffff;
-  text-decoration: none;
 
   background: #050816;
-  box-shadow: 0 8px 22px rgba(13, 21, 48, 0.10);
+
+  box-shadow:
+    0 8px 22px rgba(13, 21, 48, 0.10);
+
+  cursor: pointer;
 
   transform: scale(1);
   transform-origin: center center;
@@ -204,6 +288,7 @@ import { demos } from '../../data/demos'
 
 .demo-card.is-hovering {
   transform: scale(1.035);
+
   box-shadow:
     0 3px 9px rgba(13, 21, 48, 0.24),
     0 18px 38px rgba(13, 21, 48, 0.14);
@@ -219,19 +304,18 @@ import { demos } from '../../data/demos'
   object-fit: cover;
   object-position: top center;
 
-  filter: brightness(0.98) saturate(1.04);
+  filter:
+    brightness(0.98)
+    saturate(1.04);
+
   transition:
-    inset 0.32s ease,
-    width 0.32s ease,
-    height 0.32s ease,
     filter 0.32s ease;
 }
 
 .demo-card.is-hovering .demo-image {
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  filter: brightness(0.88) saturate(1.08);
+  filter:
+    brightness(0.88)
+    saturate(1.08);
 }
 
 .demo-overlay {
@@ -240,23 +324,46 @@ import { demos } from '../../data/demos'
   z-index: 1;
 
   background:
-    linear-gradient(180deg, rgba(5, 8, 22, 0.03), rgba(5, 8, 22, 0.28)),
-    radial-gradient(circle at 50% 35%, rgba(109, 53, 255, 0.08), transparent 46%);
+    linear-gradient(
+      180deg,
+      rgba(5, 8, 22, 0.03),
+      rgba(5, 8, 22, 0.28)
+    ),
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(109, 53, 255, 0.08),
+      transparent 46%
+    );
 
   transition: background 0.3s ease;
 }
 
 .demo-card.is-hovering .demo-overlay {
   background:
-    linear-gradient(180deg, rgba(5, 8, 22, 0.02), rgba(5, 8, 22, 0.22)),
-    radial-gradient(circle at 50% 35%, rgba(47, 180, 255, 0.08), transparent 48%);
+    linear-gradient(
+      180deg,
+      rgba(5, 8, 22, 0.02),
+      rgba(5, 8, 22, 0.22)
+    ),
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(47, 180, 255, 0.08),
+      transparent 48%
+    );
 }
 
-.demo-title {
+.demo-content {
   position: relative;
   z-index: 2;
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   max-width: 84%;
+}
+
+.demo-title {
   padding: 10px 18px 12px;
   border-radius: 14px;
 
@@ -275,7 +382,6 @@ import { demos } from '../../data/demos'
     0 8px 24px rgba(0, 0, 0, 0.55),
     0 2px 8px rgba(0, 0, 0, 0.65);
 
-  transform: translateY(0);
   transition:
     transform 0.28s ease,
     background 0.28s ease;
@@ -287,9 +393,6 @@ import { demos } from '../../data/demos'
 }
 
 @media (max-width: 720px) {
-    .demo-card.is-hovering {
-    transform: scale(1.02);
-    }
   .demos-section {
     padding: 72px 0;
   }
@@ -309,6 +412,8 @@ import { demos } from '../../data/demos'
 
   .demos-slide {
     margin-top: 36px;
+
+    touch-action: pan-y;
   }
 
   :deep(.v-slide-group__content) {
@@ -319,6 +424,15 @@ import { demos } from '../../data/demos'
     width: 300px;
     height: 215px;
     margin-inline: 8px;
+
+    user-select: none;
+    -webkit-user-select: none;
+
+    touch-action: pan-y;
+  }
+
+  .demo-card.is-hovering {
+    transform: scale(1.02);
   }
 
   .demo-title {
@@ -327,7 +441,12 @@ import { demos } from '../../data/demos'
 
   :deep(.v-slide-group__prev),
   :deep(.v-slide-group__next) {
-    display: none;
+    min-width: 34px;
+  }
+
+  :deep(.v-slide-group__prev .v-icon),
+  :deep(.v-slide-group__next .v-icon) {
+    font-size: 24px;
   }
 }
 </style>

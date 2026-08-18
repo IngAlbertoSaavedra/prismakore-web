@@ -2,15 +2,18 @@
   <section id="servicios" class="services-section">
     <div class="services-wrap">
       <div class="section-heading">
-        <span class="eyebrow">Servicios</span>
+        <span class="eyebrow">
+          Servicios
+        </span>
 
         <h2>
           Soluciones digitales para negocios que quieren avanzar sin complicarse
         </h2>
 
         <p>
-          Desde una página clara para vender mejor hasta automatizaciones que reducen trabajo
-          manual. Nada de humo corporativo, porque para eso ya existe LinkedIn.
+          Desde una página clara para vender mejor hasta automatizaciones
+          que reducen trabajo manual. Nada de humo corporativo, porque para
+          eso ya existe LinkedIn.
         </p>
       </div>
 
@@ -26,7 +29,10 @@
             v-bind="props"
             class="service-card"
             :class="{
-              'is-hovering': isDesktop ? isHovering : tarjetaActiva === index,
+              'is-hovering':
+                isDesktop
+                  ? isHovering
+                  : tarjetaActiva === index,
             }"
             tabindex="0"
             role="button"
@@ -40,7 +46,9 @@
                 {{ service.kicker }}
               </span>
 
-              <h3>{{ service.title }}</h3>
+              <h3>
+                {{ service.title }}
+              </h3>
 
               <p>
                 {{ service.description }}
@@ -63,7 +71,9 @@
                 {{ service.price }}
               </strong>
 
-              <h3>{{ service.title }}</h3>
+              <h3>
+                {{ service.title }}
+              </h3>
 
               <p>
                 {{ service.hoverText }}
@@ -76,37 +86,36 @@
               >
                 Me interesa
               </a>
-
-              <button
-                v-if="!isDesktop"
-                type="button"
-                class="mobile-back"
-                @click.stop="cerrarTarjeta"
-              >
-                Volver
-              </button>
             </div>
           </article>
         </v-hover>
       </div>
 
       <p class="services-note">
-        Precios base. Si el proyecto requiere más secciones, integraciones o diseño avanzado,
-        se cotiza antes. La sorpresa debe ser el resultado, no la factura.
+        Precios base. Si el proyecto requiere más secciones, integraciones
+        o diseño avanzado, se cotiza antes. La sorpresa debe ser el
+        resultado, no la factura.
       </p>
     </div>
   </section>
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import {
+  onBeforeUnmount,
+  onMounted,
+  ref,
+} from 'vue'
+
 import { services } from '../../data/services'
 
 const tarjetaActiva = ref(null)
 const isDesktop = ref(true)
 
 const revisarPantalla = () => {
-  isDesktop.value = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+  isDesktop.value = window
+    .matchMedia('(hover: hover) and (pointer: fine)')
+    .matches
 
   if (isDesktop.value) {
     tarjetaActiva.value = null
@@ -122,18 +131,20 @@ const alternarTarjeta = (index) => {
       : index
 }
 
-const cerrarTarjeta = () => {
-  tarjetaActiva.value = null
-}
-
 onMounted(() => {
   revisarPantalla()
 
-  window.addEventListener('resize', revisarPantalla)
+  window.addEventListener(
+    'resize',
+    revisarPantalla,
+  )
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', revisarPantalla)
+  window.removeEventListener(
+    'resize',
+    revisarPantalla,
+  )
 })
 </script>
 
@@ -141,10 +152,24 @@ onBeforeUnmount(() => {
 .services-section {
   position: relative;
   padding: 88px 0 92px;
+
   background:
-    radial-gradient(circle at 14% 18%, rgba(109, 53, 255, 0.08), transparent 28%),
-    radial-gradient(circle at 86% 10%, rgba(47, 180, 255, 0.10), transparent 30%),
-    linear-gradient(180deg, #ffffff 0%, #f7f9ff 100%);
+    radial-gradient(
+      circle at 14% 18%,
+      rgba(109, 53, 255, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 86% 10%,
+      rgba(47, 180, 255, 0.10),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f7f9ff 100%
+    );
+
   color: #0d1530;
   overflow: hidden;
 }
@@ -152,6 +177,7 @@ onBeforeUnmount(() => {
 .services-wrap {
   width: min(1180px, calc(100% - 42px));
   margin: 0 auto;
+
   position: relative;
   z-index: 1;
 }
@@ -159,6 +185,7 @@ onBeforeUnmount(() => {
 .section-heading {
   max-width: 760px;
   margin: 0 auto;
+
   text-align: center;
 }
 
@@ -172,7 +199,10 @@ onBeforeUnmount(() => {
 
   background: rgba(47, 180, 255, 0.10);
   color: #137ec8;
-  border: 1px solid rgba(47, 180, 255, 0.18);
+
+  border:
+    1px solid
+    rgba(47, 180, 255, 0.18);
 
   font-size: 13px;
   font-weight: 900;
@@ -185,6 +215,7 @@ onBeforeUnmount(() => {
   font-size: clamp(30px, 3vw, 44px);
   line-height: 1.18;
   letter-spacing: -0.028em;
+
   font-weight: 750;
   color: #10182f;
 }
@@ -194,6 +225,7 @@ onBeforeUnmount(() => {
   margin: 18px auto 0;
 
   color: #566178;
+
   font-size: 17px;
   line-height: 1.7;
 }
@@ -202,7 +234,10 @@ onBeforeUnmount(() => {
   margin-top: 48px;
 
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
   gap: 22px;
 }
 
@@ -210,6 +245,7 @@ onBeforeUnmount(() => {
   position: relative;
 
   min-height: 310px;
+
   padding: 26px 24px;
 
   display: flex;
@@ -217,15 +253,24 @@ onBeforeUnmount(() => {
 
   color: inherit;
 
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid #e7eaf2;
+  background:
+    rgba(255, 255, 255, 0.92);
+
+  border:
+    1px solid
+    #e7eaf2;
+
   border-radius: 18px;
-  box-shadow: 0 18px 46px rgba(13, 21, 48, 0.08);
+
+  box-shadow:
+    0 18px 46px
+    rgba(13, 21, 48, 0.08);
 
   overflow: hidden;
   cursor: pointer;
 
   transform: translateY(0);
+
   transition:
     transform 0.26s ease,
     box-shadow 0.26s ease,
@@ -234,27 +279,36 @@ onBeforeUnmount(() => {
 
 .service-card.is-hovering {
   transform: translateY(-6px);
-  border-color: rgba(47, 180, 255, 0.30);
-  box-shadow: 0 24px 58px rgba(16, 24, 47, 0.13);
+
+  border-color:
+    rgba(47, 180, 255, 0.30);
+
+  box-shadow:
+    0 24px 58px
+    rgba(16, 24, 47, 0.13);
 }
 
 .service-card::before {
   content: "";
+
   position: absolute;
   inset: 0 0 auto 0;
 
   height: 3px;
 
-  background: linear-gradient(
-    90deg,
-    rgba(47, 180, 255, 0),
-    rgba(47, 180, 255, 0.62),
-    rgba(16, 24, 47, 0.18),
-    rgba(47, 180, 255, 0)
-  );
+  background:
+    linear-gradient(
+      90deg,
+      rgba(47, 180, 255, 0),
+      rgba(47, 180, 255, 0.62),
+      rgba(16, 24, 47, 0.18),
+      rgba(47, 180, 255, 0)
+    );
 
   opacity: 0;
-  transition: opacity 0.24s ease;
+
+  transition:
+    opacity 0.24s ease;
 }
 
 .service-card.is-hovering::before {
@@ -281,26 +335,49 @@ onBeforeUnmount(() => {
   transform: translateY(0);
 }
 
-.service-card.is-hovering .card-front {
+.service-card.is-hovering
+.card-front {
   opacity: 0;
-  transform: translateY(-12px);
+
+  transform:
+    translateY(-12px);
+
   pointer-events: none;
 }
 
 .card-hover {
   opacity: 0;
-  transform: translateY(18px);
+
+  transform:
+    translateY(18px);
+
   pointer-events: none;
 
   background:
-    radial-gradient(circle at 18% 14%, rgba(47, 180, 255, 0.10), transparent 34%),
-    radial-gradient(circle at 86% 16%, rgba(16, 24, 47, 0.06), transparent 34%),
-    linear-gradient(135deg, #ffffff 0%, #f7fbff 100%);
+    radial-gradient(
+      circle at 18% 14%,
+      rgba(47, 180, 255, 0.10),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 86% 16%,
+      rgba(16, 24, 47, 0.06),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f7fbff 100%
+    );
 }
 
-.service-card.is-hovering .card-hover {
+.service-card.is-hovering
+.card-hover {
   opacity: 1;
-  transform: translateY(0);
+
+  transform:
+    translateY(0);
+
   pointer-events: auto;
 }
 
@@ -312,24 +389,35 @@ onBeforeUnmount(() => {
   border-radius: 999px;
 
   color: #137ec8;
-  background: rgba(47, 180, 255, 0.08);
-  border: 1px solid rgba(47, 180, 255, 0.16);
+
+  background:
+    rgba(47, 180, 255, 0.08);
+
+  border:
+    1px solid
+    rgba(47, 180, 255, 0.16);
 
   font-size: 12px;
   line-height: 1;
+
   font-weight: 950;
   letter-spacing: 0.02em;
 
-  box-shadow: 0 10px 28px rgba(47, 180, 255, 0.08);
+  box-shadow:
+    0 10px 28px
+    rgba(47, 180, 255, 0.08);
 }
 
 .service-card h3 {
   margin: 30px 0 0;
 
   color: #10182f;
+
   font-size: 21px;
   line-height: 1.25;
+
   letter-spacing: -0.02em;
+
   font-weight: 800;
 }
 
@@ -337,12 +425,14 @@ onBeforeUnmount(() => {
   margin: 16px 0 0;
 
   color: #566178;
+
   font-size: 14px;
   line-height: 1.65;
 }
 
 .price-label {
   color: #137ec8;
+
   font-size: 13px;
   font-weight: 900;
 }
@@ -351,9 +441,13 @@ onBeforeUnmount(() => {
   margin-top: 8px;
 
   color: #10182f;
-  font-size: clamp(36px, 3vw, 48px);
+
+  font-size:
+    clamp(36px, 3vw, 48px);
+
   line-height: 1;
   letter-spacing: -0.06em;
+
   font-weight: 950;
 }
 
@@ -367,7 +461,9 @@ onBeforeUnmount(() => {
 
 .service-action {
   width: fit-content;
+
   margin-top: auto;
+
   padding: 10px 16px;
 
   border-radius: 999px;
@@ -377,6 +473,7 @@ onBeforeUnmount(() => {
 
   font-size: 13px;
   font-weight: 800;
+
   text-decoration: none;
 
   transition:
@@ -386,6 +483,7 @@ onBeforeUnmount(() => {
 
 .service-action:hover {
   transform: translateY(-2px);
+
   background: #137ec8;
 }
 
@@ -393,23 +491,23 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-.mobile-back {
-  display: none;
-}
-
 .services-note {
   max-width: 760px;
+
   margin: 34px auto 0;
 
   color: #303a52;
+
   font-size: 14px;
   line-height: 1.6;
+
   text-align: center;
 }
 
 @media (max-width: 1100px) {
   .services-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -419,11 +517,16 @@ onBeforeUnmount(() => {
   }
 
   .services-wrap {
-    width: min(100% - 32px, 1180px);
+    width:
+      min(
+        calc(100% - 32px),
+        1180px
+      );
   }
 
   .services-grid {
     grid-template-columns: 1fr;
+
     margin-top: 34px;
   }
 
@@ -446,28 +549,13 @@ onBeforeUnmount(() => {
 
   .mobile-hint {
     display: inline-block;
+
     margin-top: auto;
 
     color: #137ec8;
+
     font-size: 12px;
     font-weight: 800;
-  }
-
-  .mobile-back {
-    display: inline-flex;
-    width: fit-content;
-
-    margin-top: 10px;
-    padding: 0;
-
-    border: 0;
-    background: transparent;
-
-    color: #566178;
-    font-size: 12px;
-    font-weight: 700;
-
-    cursor: pointer;
   }
 }
 </style>
