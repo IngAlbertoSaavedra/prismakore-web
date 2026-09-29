@@ -116,55 +116,116 @@
         </div>
 
         <div class="form-card">
-          <h2>Solicita tus recursos</h2>
+          <div class="form-card__heading">
+            <div class="form-card__gift">
+              <v-icon icon="mdi-gift-outline" size="30" />
+            </div>
+
+            <div>
+              <h2>Solicita tus recursos</h2>
+              <p>Completa el formulario y recibe tus 2 eBooks gratis.</p>
+            </div>
+          </div>
 
           <form @submit.prevent="submitForm">
-            <input
-              v-model="form.nombre"
-              type="text"
-              placeholder="Nombre"
-              required
-            />
+            <div class="field-group">
+              <label for="nombre">Nombre <span>*</span></label>
+              <div class="field-control">
+                <v-icon icon="mdi-account-outline" size="21" />
+                <input
+                  id="nombre"
+                  v-model="form.nombre"
+                  type="text"
+                  placeholder="Tu nombre completo"
+                  autocomplete="name"
+                  required
+                />
+              </div>
+            </div>
 
-            <input
-              v-model="form.correo"
-              type="email"
-              placeholder="Correo"
-              required
-            />
+            <div class="field-group">
+              <label for="correo">Correo <span>*</span></label>
+              <div class="field-control">
+                <v-icon icon="mdi-email-outline" size="21" />
+                <input
+                  id="correo"
+                  v-model="form.correo"
+                  type="email"
+                  placeholder="tu@correo.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+            </div>
 
-            <input
-              v-model="form.whatsapp"
-              type="tel"
-              placeholder="WhatsApp"
-              required
-            />
+            <div class="field-group">
+              <label for="whatsapp">WhatsApp <span>*</span></label>
+              <div class="field-control">
+                <v-icon icon="mdi-whatsapp" size="21" />
+                <input
+                  id="whatsapp"
+                  v-model="form.whatsapp"
+                  type="tel"
+                  placeholder="+52 33 1234 5678"
+                  autocomplete="tel"
+                  required
+                />
+              </div>
+              <small class="field-help">
+                <v-icon icon="mdi-information-outline" size="16" />
+                WhatsApp nos ayuda a darte seguimiento más rápido.
+              </small>
+            </div>
 
-            <select v-model="form.perfil" required>
-              <option value="" disabled>Selecciona tu perfil</option>
-              <option>Emprendedor</option>
-              <option>Dueño de negocio</option>
-              <option>Docente</option>
-              <option>Estudiante universitario</option>
-              <option>Analista</option>
-              <option>Profesional independiente</option>
-              <option>Otro</option>
-            </select>
+            <div class="form-row">
+              <div class="field-group">
+                <label for="perfil">Perfil <span>*</span></label>
+                <div class="field-control field-control--select">
+                  <v-icon icon="mdi-account-outline" size="21" />
+                  <select id="perfil" v-model="form.perfil" required>
+                    <option value="" disabled>Selecciona tu perfil</option>
+                    <option>Emprendedor</option>
+                    <option>Dueño de negocio</option>
+                    <option>Docente</option>
+                    <option>Estudiante universitario</option>
+                    <option>Analista</option>
+                    <option>Profesional independiente</option>
+                    <option>Otro</option>
+                  </select>
+                </div>
+              </div>
 
-            <select v-model="form.interes" required>
-              <option value="" disabled>Selecciona un interés</option>
-              <option>Excel</option>
-              <option>Power BI / DAX</option>
-              <option>Automatización</option>
-              <option>IA aplicada</option>
-              <option>Sitio web</option>
-              <option>Desarrollo de sistemas</option>
-              <option>Diagnóstico</option>
-              <option>Otro</option>
-            </select>
+              <div class="field-group">
+                <label for="interes">Interés principal <span>*</span></label>
+                <div class="field-control field-control--select">
+                  <v-icon icon="mdi-bullseye-arrow" size="21" />
+                  <select id="interes" v-model="form.interes" required>
+                    <option value="" disabled>Selecciona un interés</option>
+                    <option>Excel</option>
+                    <option>Power BI / DAX</option>
+                    <option>Automatización</option>
+                    <option>IA aplicada</option>
+                    <option>Sitio web</option>
+                    <option>Desarrollo de sistemas</option>
+                    <option>Diagnóstico</option>
+                    <option>Otro</option>
+                  </select>
+                </div>
+              </div>
+            </div>
 
-            <button type="submit">
-              Quiero mis eBooks
+            <label class="privacy-check">
+              <input type="checkbox" required />
+              <span>
+                He leído y acepto el
+                <a href="/privacidad" target="_blank" rel="noopener">Aviso de Privacidad</a>.
+              </span>
+            </label>
+
+            <button type="submit" class="form-submit">
+              <v-icon icon="mdi-send" size="20" />
+              <span>Quiero mis eBooks</span>
+              <v-icon icon="mdi-arrow-right" size="20" />
             </button>
           </form>
         </div>
@@ -224,7 +285,18 @@
       </section>
     </section>
     <footer class="connect-footer">
-      <div class="connect-footer__wave"></div>
+      <div class="connect-footer__wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 92" preserveAspectRatio="none">
+          <path
+            class="connect-footer__wave-fill"
+            d="M0 0H1440V26C1180 22 954 42 720 56C474 71 251 71 0 52V0Z"
+          />
+          <path
+            class="connect-footer__wave-line"
+            d="M0 52C251 71 474 71 720 56C954 42 1180 22 1440 26"
+          />
+        </svg>
+      </div>
 
       <div class="connect-footer__inner">
         <PrismaKoreBrand />
@@ -258,7 +330,7 @@ const submitForm = () => {
 .connect2026 {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fbff 0%, #ffffff 55%, #eef6ff 100%);
-  padding: 32px 16px;
+  padding: 32px 16px 0;
 }
 
 .hero-content {
@@ -292,42 +364,171 @@ const submitForm = () => {
 
 .form-card {
   margin-top: 32px;
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 18px 50px rgba(25, 52, 100, 0.12);
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #edf1f7;
+  border-radius: 28px;
+  padding: 28px;
+  box-shadow: 0 22px 60px rgba(25, 52, 100, 0.14);
+}
+
+.form-card__heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.form-card__gift {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #eef0ff 0%, #f6eaff 100%);
+  color: #7b35f4;
 }
 
 .form-card h2 {
-  margin-bottom: 18px;
-  color: #111a46;
+  margin: 0;
+  color: #101945;
+  font-size: clamp(1.8rem, 3vw, 2.35rem);
+  line-height: 1.05;
 }
 
-form {
+.form-card__heading p {
+  margin: 6px 0 0;
+  color: #69748d;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.form-card form {
   display: grid;
+  gap: 16px;
+}
+
+.field-group {
+  min-width: 0;
+}
+
+.field-group label {
+  display: block;
+  margin: 0 0 7px;
+  color: #111a46;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.field-group label span {
+  color: #ef3b5d;
+}
+
+.field-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid #cfd9e8;
+  border-radius: 12px;
+  background: #fff;
+  color: #64748b;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.field-control:focus-within {
+  border-color: #6d5dfc;
+  box-shadow: 0 0 0 3px rgba(109, 93, 252, 0.10);
+}
+
+.field-control input,
+.field-control select {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #1b2a4e;
+  font: inherit;
+}
+
+.field-control input::placeholder {
+  color: #9aa7ba;
+}
+
+.field-control select {
+  appearance: auto;
+  cursor: pointer;
+}
+
+.field-help {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+  color: #65728b;
+  font-size: 0.74rem;
+  line-height: 1.3;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
 
-input,
-select {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #d8e1ef;
-  border-radius: 12px;
-  font-size: 1rem;
-  background: white;
+.privacy-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #69748d;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  cursor: pointer;
 }
 
-button {
-  margin-top: 6px;
-  padding: 15px 18px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(90deg, #6b35ff, #009dff);
-  color: white;
-  font-size: 1rem;
+.privacy-check input {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: #6b35ff;
+}
+
+.privacy-check a {
+  color: #3156d9;
   font-weight: 700;
+  text-decoration: none;
+}
+
+.privacy-check a:hover {
+  text-decoration: underline;
+}
+
+.form-submit {
+  width: 100%;
+  min-height: 56px;
+  margin-top: 2px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(90deg, #b126f0 0%, #6b35ff 44%, #00b8f4 100%);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0 12px 26px rgba(88, 72, 225, 0.24);
   cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.form-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(88, 72, 225, 0.30);
 }
 
 .event-topbar {
@@ -692,69 +893,52 @@ button {
 
 .connect-footer {
   position: relative;
-  margin: 35px -16px -32px;
-  min-height: 150px;
-  padding-top: 42px;
-
-  background: linear-gradient(
-    105deg,
-    #06244c 0%,
-    #07549a 62%,
-    #0075c9 100%
-  );
-
-  color: #fff;
+  margin: 42px -16px 0;
+  min-height: 178px;
+  padding-top: 58px;
   overflow: hidden;
+  color: #fff;
+  background: linear-gradient(105deg, #06244c 0%, #07549a 62%, #0075c9 100%);
 }
 
-/* franja celeste de transición */
-.connect-footer::before {
-  content: "";
-  position: absolute;
-  top: 19px;
-  left: -3%;
-  width: 106%;
-  height: 14px;
-
-  background: linear-gradient(
-    90deg,
-    #45d1ff,
-    #278eff,
-    #13c7ee
-  );
-
-  border-radius: 50% 50% 0 0;
-  transform: rotate(-1.2deg);
-}
-
-/* onda blanca */
 .connect-footer__wave {
   position: absolute;
-  top: -27px;
-  left: -3%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 68px;
+  pointer-events: none;
+}
 
-  width: 106%;
-  height: 58px;
+.connect-footer__wave svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 
-  background: #fff;
+.connect-footer__wave-fill {
+  fill: #f8fbff;
+}
 
-  border-radius: 0 0 50% 50%;
-  transform: rotate(-1.2deg);
+.connect-footer__wave-line {
+  fill: none;
+  stroke: #25c7ff;
+  stroke-width: 7;
+  vector-effect: non-scaling-stroke;
 }
 
 .connect-footer__inner {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 1180px;
+  max-width: 1100px;
   margin: 0 auto;
-
-  padding: 16px 32px 25px;
-
+  padding: 8px 18px 26px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-/* branding más parecido a la referencia */
 .connect-footer :deep(.pk-brand) {
   gap: 12px;
 }
@@ -774,21 +958,25 @@ button {
 }
 
 .connect-footer :deep(.pk-brand__tagline) {
+  margin-top: 3px;
   color: #fff;
   font-size: 12px;
-  margin-top: 3px;
 }
 
 .connect-footer__copyright {
   margin: 10px 0 0 70px;
-
-  color: rgba(255,255,255,.85);
+  color: rgba(255, 255, 255, 0.88);
   font-size: 0.7rem;
 }
 
 @media (max-width: 700px) {
   .connect-footer {
-    min-height: 140px;
+    min-height: 160px;
+    padding-top: 54px;
+  }
+
+  .connect-footer__wave {
+    height: 62px;
   }
 
   .connect-footer__inner {
@@ -848,6 +1036,26 @@ button {
 
   .benefit-item {
     align-items: center;
+  }
+}
+
+@media (max-width: 620px) {
+  .form-card {
+    padding: 22px 18px;
+    border-radius: 22px;
+  }
+
+  .form-card__heading {
+    align-items: flex-start;
+  }
+
+  .form-card__gift {
+    width: 50px;
+    height: 50px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }
 
