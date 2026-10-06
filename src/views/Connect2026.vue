@@ -215,18 +215,34 @@
             </div>
 
             <label class="privacy-check">
-              <input type="checkbox" required />
+              <input v-model="form.privacidad" type="checkbox" required />
               <span>
                 He leído y acepto el
-                <a href="/privacidad" target="_blank" rel="noopener">Aviso de Privacidad</a>.
+                <button
+                  type="button"
+                  class="privacy-link"
+                  @click="privacyOpen = true"
+                >
+                  Aviso de Privacidad
+                </button>.
               </span>
             </label>
 
-            <button type="submit" class="form-submit">
+            <button type="submit" class="form-submit" :disabled="isSubmitting">
               <v-icon icon="mdi-send" size="20" />
-              <span>Quiero mis eBooks</span>
+              <span>{{ isSubmitting ? 'Enviando...' : 'Quiero mis eBooks' }}</span>
               <v-icon icon="mdi-arrow-right" size="20" />
             </button>
+
+            <div v-if="submitStatus === 'success'" class="form-message form-message--success">
+              <v-icon icon="mdi-check-circle-outline" size="21" />
+              <span>Listo. Revisa tu correo; ahí recibirás los enlaces para descargar tus eBooks.</span>
+            </div>
+
+            <div v-else-if="submitStatus === 'error'" class="form-message form-message--error">
+              <v-icon icon="mdi-alert-circle-outline" size="21" />
+              <span>No pudimos enviar tus datos. Inténtalo nuevamente en unos segundos.</span>
+            </div>
           </form>
         </div>
       </div>
@@ -306,23 +322,132 @@
         </p>
       </div>
     </footer>
+    <div
+      v-if="privacyOpen"
+      class="privacy-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="privacy-title"
+      @click.self="privacyOpen = false"
+    >
+      <div class="privacy-modal__card">
+        <button
+          type="button"
+          class="privacy-modal__close"
+          aria-label="Cerrar aviso de privacidad"
+          @click="privacyOpen = false"
+        >
+          ×
+        </button>
+
+        <h2 id="privacy-title">Aviso de Privacidad</h2>
+
+        <p>
+          PrismaKore Solutions utilizará los datos que proporciones en este
+          formulario para enviarte los recursos solicitados, dar seguimiento a
+          tu solicitud, conocer tu interés principal y contactarte respecto de
+          servicios relacionados con automatización, análisis de datos,
+          desarrollo y soluciones digitales.
+        </p>
+
+        <p>
+          Los datos recabados pueden incluir nombre, correo electrónico,
+          WhatsApp, perfil profesional e interés principal. La información
+          podrá registrarse en herramientas de seguimiento comercial y
+          plataformas tecnológicas necesarias para prestar estos servicios.
+        </p>
+
+        <p>
+          PrismaKore Solutions no comercializará tus datos personales. Podrás
+          solicitar posteriormente la actualización o eliminación de tus datos
+          utilizando los medios de contacto publicados por PrismaKore Solutions.
+        </p>
+
+        <p class="privacy-modal__note">
+          Aviso simplificado para esta campaña. El aviso integral podrá
+          complementarse con los datos legales definitivos de PrismaKore
+          Solutions.
+        </p>
+
+        <button
+          type="button"
+          class="privacy-modal__accept"
+          @click="privacyOpen = false"
+        >
+          Entendido
+        </button>
+      </div>
+    </div>
+
   </main>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import PrismaKoreBrand from '@/components/branding/PrismaKoreBrand.vue'
+
+const WEBHOOK_URL = 'https://n8n-n8n.enoxgt.easypanel.host/webhook/connect2026'
+//const WEBHOOK_URL = 'https://n8n-n8n.enoxgt.easypanel.host/webhook-test/connect2026'
 
 const form = reactive({
   nombre: '',
   correo: '',
   whatsapp: '',
   perfil: '',
-  interes: ''
+  interes: '',
+  privacidad: false
 })
 
-const submitForm = () => {
-  console.log(form)
+const isSubmitting = ref(false)
+const submitStatus = ref('')
+const privacyOpen = ref(false)
+
+const submitForm = async () => {
+  if (isSubmitting.value) return
+
+  isSubmitting.value = true
+  submitStatus.value = ''
+
+  const payload = {
+    nombre: form.nombre.trim(),
+    correo: form.correo.trim(),
+    whatsapp: form.whatsapp.trim(),
+    perfil: form.perfil,
+    interes: form.interes,
+    privacidad: form.privacidad ? 'true' : 'false',
+    recursos: 'ebook-dax,ebook-excel',
+    origen: 'connect-zapopan-2026',
+    fechaRegistro: new Date().toISOString()
+  }
+
+  try {
+    /*
+      Enviamos como application/x-www-form-urlencoded y no-cors.
+      Esto evita el preflight OPTIONS que suele bloquear n8n
+      cuando el formulario está en otro dominio.
+    */
+    const body = new URLSearchParams(payload)
+
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body
+    })
+
+    submitStatus.value = 'success'
+
+    form.nombre = ''
+    form.correo = ''
+    form.whatsapp = ''
+    form.perfil = ''
+    form.interes = ''
+    form.privacidad = false
+  } catch (error) {
+    console.error('Error enviando formulario Connect2026:', error)
+    submitStatus.value = 'error'
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -406,6 +531,33 @@ const submitForm = () => {
 .form-card form {
   display: grid;
   gap: 16px;
+}
+
+.form-submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.form-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.form-message--success {
+  color: #17643a;
+  background: #edf9f2;
+  border: 1px solid #ccebd9;
+}
+
+.form-message--error {
+  color: #9f2c2c;
+  background: #fff2f2;
+  border: 1px solid #f2cccc;
 }
 
 .field-group {
@@ -1085,4 +1237,132 @@ const submitForm = () => {
     margin-top: 0;
   }
 }
+
+/* =========================
+   AVISO DE PRIVACIDAD
+========================= */
+
+.privacy-link {
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  color: #2457d6;
+
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+
+  cursor: pointer;
+}
+
+.privacy-modal {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+
+  display: grid;
+  place-items: center;
+
+  padding: 20px;
+
+  background: rgba(7, 17, 42, 0.68);
+}
+
+.privacy-modal__card {
+  position: relative;
+
+  width: min(620px, 100%);
+  max-height: min(720px, calc(100vh - 40px));
+  overflow-y: auto;
+
+  padding: 30px;
+
+  border-radius: 22px;
+
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(9, 30, 70, 0.28);
+}
+
+.privacy-modal__card h2 {
+  margin: 0 42px 18px 0;
+
+  color: #101945;
+
+  font-size: 1.8rem;
+}
+
+.privacy-modal__card p {
+  margin: 0 0 14px;
+
+  color: #4f5d73;
+
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.privacy-modal__note {
+  padding: 12px 14px;
+
+  border-radius: 12px;
+
+  background: #f5f7fb;
+
+  font-size: 0.85rem !important;
+}
+
+.privacy-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: #f1f4f8;
+  color: #17254d;
+
+  font-size: 1.5rem;
+
+  cursor: pointer;
+}
+
+.privacy-modal__accept {
+  min-height: 44px;
+
+  padding: 0 20px;
+
+  border: 0;
+  border-radius: 12px;
+
+  background: linear-gradient(90deg, #7c2cff, #12b7e8);
+  color: #ffffff;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .privacy-modal {
+    padding: 12px;
+  }
+
+  .privacy-modal__card {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+
+  .privacy-modal__card h2 {
+    font-size: 1.5rem;
+  }
+}
+
 </style>
