@@ -2,7 +2,7 @@
   <footer class="pk-footer">
     <div class="footer-wrap">
       <div class="footer-main">
-        <a class="footer-brand" href="#inicio" aria-label="PrismaKore Solutions">
+        <RouterLink class="footer-brand" to="/" aria-label="PrismaKore Solutions">
           <img
             class="footer-logo"
             :src="prismaMark"
@@ -13,7 +13,7 @@
           <span class="footer-brand-text">
             Prisma<span>Kore Solutions</span>
           </span>
-        </a>
+        </RouterLink>
 
         <p class="footer-description">
           Sitios web, demos y automatización práctica para presentar mejor tu negocio,
@@ -22,25 +22,14 @@
       </div>
 
       <nav class="footer-nav" aria-label="Navegación inferior">
-        <a href="#inicio">Inicio</a>
-        <a href="#servicios">Servicios</a>
-        <a href="#demos">Demos</a>
-        <a href="#proceso">Proceso</a>
-        <a href="#contacto">Contacto</a>
+        <RouterLink to="/">Inicio</RouterLink>
+        <RouterLink to="/nosotros">Nosotros</RouterLink>
+        <RouterLink :to="{ path: '/', hash: '#servicios' }">Servicios</RouterLink>
+        <RouterLink :to="{ path: '/', hash: '#demos' }">Demos</RouterLink>
+        <RouterLink :to="{ path: '/', hash: '#proceso' }">Proceso</RouterLink>
+        <RouterLink :to="{ path: '/', hash: '#contacto' }">Contacto</RouterLink>
       </nav>
 
-      <div class="footer-contact">
-        <span class="footer-label">Primer paso</span>
-
-        <a
-          class="footer-cta"
-          href="https://ajsaavedra.com/diagnostico/"
-          target="_blank"
-          rel="noopener"
-        >
-          Iniciar diagnóstico
-        </a>
-      </div>
     </div>
 
     <div class="footer-bottom">
@@ -94,7 +83,7 @@ const currentYear = new Date().getFullYear()
   padding: 46px 0;
 
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) auto minmax(220px, 0.55fr);
+  grid-template-columns: minmax(0, 1.2fr) auto;
   gap: 42px;
   align-items: center;
 }

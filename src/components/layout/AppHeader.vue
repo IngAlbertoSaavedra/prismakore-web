@@ -1,7 +1,7 @@
 <template>
   <header class="pk-header">
     <div class="pk-wrap pk-nav">
-      <a class="pk-logo" href="#inicio" aria-label="PrismaKore Solutions">
+      <RouterLink class="pk-logo" to="/" aria-label="PrismaKore Solutions">
         <span class="pk-logo-lockup">
           <img
             class="pk-logo-mark"
@@ -16,51 +16,83 @@
             </span>
           </span>
         </span>
-      </a>
+      </RouterLink>
 
       <nav class="pk-main-nav" aria-label="Navegación principal">
-        <a
-          v-for="item in navItems"
-          :key="item.id"
-          :href="`#${item.id}`"
-          :class="{ active: activeSection === item.id }"
-          @click="activeSection = item.id"
-        >
-          {{ item.label }}
-        </a>
+        <template v-for="item in navItems" :key="item.label">
+          <button
+            v-if="item.action === 'contact'"
+            type="button"
+            class="pk-nav-button"
+            @click="contactOpen = true"
+          >
+            {{ item.label }}
+          </button>
+
+          <RouterLink
+            v-else
+            :to="item.to"
+            :class="{ active: isItemActive(item) }"
+            @click="handleNavClick(item)"
+          >
+            {{ item.label }}
+          </RouterLink>
+        </template>
       </nav>
     </div>
+
+    <ContactModal :open="contactOpen" @close="contactOpen = false" />
   </header>
 </template>
 
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import prismaMark from '@/assets/images/pk-transparente.png'
+import ContactModal from './ContactModal.vue'
 
+const route = useRoute()
 const activeSection = ref('inicio')
+const contactOpen = ref(false)
 
 const navItems = [
-  { id: 'inicio', label: 'Inicio' },
-  { id: 'servicios', label: 'Servicios' },
-  { id: 'demos', label: 'Demos' },
-  { id: 'proceso', label: 'Proceso' },
-  { id: 'contacto', label: 'Contacto' }
+  { id: 'inicio', label: 'Inicio', to: { path: '/', hash: '#inicio' } },
+  { id: 'nosotros', label: 'Nosotros', to: { path: '/nosotros' }, routeName: 'nosotros' },
+  { id: 'servicios', label: 'Servicios', to: { path: '/', hash: '#servicios' } },
+  { id: 'demos', label: 'Demos', to: { path: '/', hash: '#demos' } },
+  { id: 'proceso', label: 'Proceso', to: { path: '/', hash: '#proceso' } },
+  { id: 'contacto', label: 'Contacto', action: 'contact' }
 ]
 
+const homeSectionItems = navItems.filter((item) => !item.routeName && !item.action)
+
+const isItemActive = (item) => {
+  if (item.action) return false
+
+  if (item.routeName) {
+    return route.name === item.routeName
+  }
+
+  return route.name === 'home' && activeSection.value === item.id
+}
+
+const handleNavClick = (item) => {
+  if (!item.routeName && !item.action) {
+    activeSection.value = item.id
+  }
+}
+
 const updateActiveSection = () => {
+  if (route.name !== 'home') return
+
   const scrollPosition = window.scrollY + 180
   const documentHeight = document.documentElement.scrollHeight
   const windowHeight = window.innerHeight
   const isNearBottom = window.scrollY + windowHeight >= documentHeight - 80
 
-  if (isNearBottom) {
-    activeSection.value = 'contacto'
-    return
-  }
+  let currentSection = homeSectionItems[0].id
 
-  let currentSection = navItems[0].id
-
-  for (const item of navItems) {
+  for (const item of homeSectionItems) {
     const section = document.getElementById(item.id)
 
     if (!section) continue
@@ -177,7 +209,7 @@ onUnmounted(() => {
 
 .pk-main-nav {
   display: flex;
-  gap: 30px;
+  gap: 25px;
   align-items: center;
 
   font-size: 14px;
@@ -185,16 +217,22 @@ onUnmounted(() => {
   color: #f3f4ff;
 }
 
-.pk-main-nav a {
+.pk-main-nav a,
+.pk-nav-button {
   color: inherit;
   text-decoration: none;
   opacity: 0.92;
   padding: 33px 0 28px;
+  border: 0;
   border-bottom: 3px solid transparent;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
   transition: color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
 }
 
-.pk-main-nav a:hover {
+.pk-main-nav a:hover,
+.pk-nav-button:hover {
   opacity: 1;
   color: #ffffff;
 }
