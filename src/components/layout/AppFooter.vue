@@ -1,45 +1,29 @@
 <template>
   <footer class="pk-footer">
     <div class="footer-wrap">
-      <div class="footer-main">
-        <RouterLink class="footer-brand" to="/" aria-label="PrismaKore Solutions">
-          <img
-            class="footer-logo"
-            :src="prismaMark"
-            alt=""
-            aria-hidden="true"
-          />
+      <RouterLink class="footer-brand" to="/" aria-label="PrismaKore Solutions">
+        <img
+          class="footer-logo"
+          :src="prismaMark"
+          alt=""
+          aria-hidden="true"
+        />
 
-          <span class="footer-brand-text">
-            Prisma<span>Kore Solutions</span>
-          </span>
-        </RouterLink>
+        <span class="footer-brand-text">
+          Prisma<span>Kore Solutions</span>
+        </span>
+      </RouterLink>
 
-        <p class="footer-description">
-          Sitios web, demos y automatización práctica para presentar mejor tu negocio,
-          mostrar tus servicios y facilitar tareas concretas.
-        </p>
-      </div>
-
-      <nav class="footer-nav" aria-label="Navegación inferior">
-        <RouterLink to="/">Inicio</RouterLink>
-        <RouterLink to="/nosotros">Nosotros</RouterLink>
-        <RouterLink :to="{ path: '/', hash: '#servicios' }">Servicios</RouterLink>
-        <RouterLink :to="{ path: '/', hash: '#demos' }">Demos</RouterLink>
-        <RouterLink :to="{ path: '/', hash: '#proceso' }">Proceso</RouterLink>
-        <RouterLink :to="{ path: '/', hash: '#contacto' }">Contacto</RouterLink>
-      </nav>
-
+      <p class="footer-description">
+        Sitios web, demos y automatización práctica para presentar mejor tu negocio,
+        mostrar tus servicios y facilitar tareas concretas.
+      </p>
     </div>
 
     <div class="footer-bottom">
       <div class="footer-bottom-wrap">
         <p>
           © {{ currentYear }} PrismaKore Solutions. Todos los derechos reservados.
-        </p>
-
-        <p class="footer-note">
-          Hecho con enfoque práctico, café y una cantidad poco saludable de ajustes visuales.
         </p>
       </div>
     </div>
@@ -67,36 +51,29 @@ const currentYear = new Date().getFullYear()
   content: "";
   position: absolute;
   inset: 0;
-
   background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.04), transparent 34%, transparent 72%, rgba(47, 180, 255, 0.04));
-
+    linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.04),
+      transparent 34%,
+      transparent 72%,
+      rgba(47, 180, 255, 0.04)
+    );
   pointer-events: none;
 }
 
 .footer-wrap {
   position: relative;
   z-index: 1;
-
   width: min(1180px, calc(100% - 42px));
   margin: 0 auto;
-  padding: 46px 0;
-
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) auto;
-  gap: 42px;
-  align-items: center;
-}
-
-.footer-main {
-  max-width: 520px;
+  padding: 42px 0 36px;
 }
 
 .footer-brand {
   display: inline-flex;
   align-items: center;
   gap: 14px;
-
   color: inherit;
   text-decoration: none;
 }
@@ -106,11 +83,8 @@ const currentYear = new Date().getFullYear()
   height: 46px;
   display: block;
   object-fit: contain;
-
   filter: drop-shadow(0 8px 18px rgba(47, 180, 255, 0.18));
-  transition:
-    transform 0.24s ease,
-    filter 0.24s ease;
+  transition: transform 0.24s ease, filter 0.24s ease;
 }
 
 .footer-brand:hover .footer-logo {
@@ -132,100 +106,16 @@ const currentYear = new Date().getFullYear()
 }
 
 .footer-description {
-  max-width: 500px;
+  max-width: 560px;
   margin: 18px 0 0;
-
   color: rgba(248, 251, 255, 0.66);
   font-size: 14px;
   line-height: 1.7;
 }
 
-.footer-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.footer-nav a {
-  width: fit-content;
-
-  color: rgba(248, 251, 255, 0.72);
-  font-size: 14px;
-  font-weight: 800;
-  text-decoration: none;
-
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.footer-nav a:hover {
-  color: #2fb4ff;
-  transform: translateX(3px);
-}
-
-.footer-contact {
-  justify-self: end;
-
-  padding: 22px;
-  width: 100%;
-  max-width: 260px;
-
-  border-radius: 18px;
-  border: 1px solid rgba(47, 180, 255, 0.18);
-
-  background:
-    radial-gradient(circle at 18% 14%, rgba(47, 180, 255, 0.12), transparent 36%),
-    rgba(255, 255, 255, 0.055);
-
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.16);
-}
-
-.footer-label {
-  display: block;
-
-  color: #2fb4ff;
-  font-size: 12px;
-  line-height: 1;
-  font-weight: 950;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.footer-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 100%;
-  min-height: 44px;
-  margin-top: 16px;
-  padding: 0 18px;
-
-  color: #ffffff;
-  background: linear-gradient(135deg, #137ec8, #2fb4ff);
-  border-radius: 10px;
-
-  font-size: 14px;
-  font-weight: 900;
-  text-decoration: none;
-
-  box-shadow: 0 16px 32px rgba(47, 180, 255, 0.20);
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.footer-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 42px rgba(47, 180, 255, 0.30);
-}
-
 .footer-bottom {
   position: relative;
   z-index: 1;
-
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(0, 0, 0, 0.16);
 }
@@ -234,53 +124,15 @@ const currentYear = new Date().getFullYear()
   width: min(1180px, calc(100% - 42px));
   min-height: 58px;
   margin: 0 auto;
-
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
 }
 
 .footer-bottom p {
   margin: 0;
-
   color: rgba(248, 251, 255, 0.58);
   font-size: 13px;
   line-height: 1.5;
-}
-
-.footer-note {
-  text-align: right;
-}
-
-@media (max-width: 900px) {
-  .footer-wrap {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    align-items: flex-start;
-  }
-
-  .footer-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 14px 22px;
-  }
-
-  .footer-contact {
-    justify-self: start;
-    max-width: 320px;
-  }
-
-  .footer-bottom-wrap {
-    padding: 18px 0;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .footer-note {
-    text-align: left;
-  }
 }
 
 @media (max-width: 640px) {
@@ -290,7 +142,7 @@ const currentYear = new Date().getFullYear()
   }
 
   .footer-wrap {
-    padding: 40px 0;
+    padding: 34px 0 30px;
   }
 
   .footer-brand-text {
@@ -302,13 +154,9 @@ const currentYear = new Date().getFullYear()
     height: 42px;
   }
 
-  .footer-nav {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .footer-contact {
-    max-width: 100%;
+  .footer-bottom-wrap {
+    min-height: auto;
+    padding: 16px 0;
   }
 }
 </style>
